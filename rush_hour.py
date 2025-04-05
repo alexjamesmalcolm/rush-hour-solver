@@ -9,7 +9,7 @@ class Location:
 
 
 @dataclass
-class Exit(Location):
+class RushHourExit(Location):
     exit_direction: Literal["Top", "Bottom", "Left", "Right"]
 
 
@@ -30,4 +30,4 @@ class RushHourCar(Location):
 class RushHourGame:
     board_size: int
     cars: List[RushHourCar]
-    goal: Exit
+    goal: RushHourExit
