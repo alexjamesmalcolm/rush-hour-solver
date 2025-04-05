@@ -35,6 +35,26 @@ class RushHourGameVisualization:
             fill="red" if car.is_player else random_color(),
         )
 
+    def draw_exit(self, canvas: tk.Canvas) -> None:
+        cell_size = self.size // self.game.board_size
+        col = self.game.goal.col
+        row = self.game.goal.row
+        x = col * cell_size
+        y = row * cell_size
+
+        if self.game.goal.exit_direction == "Top":
+            canvas.create_line(x, y, x + cell_size, y, fill="red", width=4)
+        elif self.game.goal.exit_direction == "Bottom":
+            canvas.create_line(
+                x, y + cell_size, x + cell_size, y + cell_size, fill="red", width=4
+            )
+        elif self.game.goal.exit_direction == "Left":
+            canvas.create_line(x, y, x, y + cell_size, fill="red", width=4)
+        elif self.game.goal.exit_direction == "Right":
+            canvas.create_line(
+                x + cell_size, y, x + cell_size, y + cell_size, fill="red", width=4
+            )
+
     def visualize(self):
         root = tk.Tk()
         canvas = tk.Canvas(root, width=self.size, height=self.size)
@@ -42,4 +62,5 @@ class RushHourGameVisualization:
         self.draw_grid(canvas)
         for car in self.game.cars:
             self.draw_car(canvas, car)
+        self.draw_exit(canvas)
         root.mainloop()

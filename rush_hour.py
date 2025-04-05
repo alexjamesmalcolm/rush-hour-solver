@@ -1,4 +1,4 @@
-from typing import List
+from typing import List, Literal
 from dataclasses import dataclass
 
 
@@ -6,6 +6,11 @@ from dataclasses import dataclass
 class Location:
     col: int
     row: int
+
+
+@dataclass
+class Exit(Location):
+    exit_direction: Literal["Top", "Bottom", "Left", "Right"]
 
 
 @dataclass
@@ -25,4 +30,4 @@ class RushHourCar(Location):
 class RushHourGame:
     board_size: int
     cars: List[RushHourCar]
-    goal: Location
+    goal: Exit
