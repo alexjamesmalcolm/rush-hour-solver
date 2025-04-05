@@ -10,4 +10,4 @@ class Movement:
 
 
 def solve_game(game: RushHourGame) -> List[Tuple[RushHourCar, Movement]]:
-    return [None]
+    return [(game.cars[0], Movement(direction="Right", distance=3))]

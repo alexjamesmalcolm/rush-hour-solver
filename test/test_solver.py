@@ -1,15 +1,16 @@
 from unittest import TestCase
 
 from rush_hour import RushHourGame, RushHourCar, RushHourExit
-from solver import solve_game
+from solver import solve_game, Movement
 
 
 class TestSolver(TestCase):
     def test_one_step_solution(self):
+        player = RushHourCar(col=1, row=1, is_player=True, width=2, height=1)
         game = RushHourGame(
             board_size=6,
             cars=[
-                RushHourCar(col=1, row=1, is_player=True, width=2, height=1),
+                player,
                 RushHourCar(col=1, row=3, is_player=False, width=1, height=2),
             ],
             goal=RushHourExit(col=5, row=1, exit_direction="Right"),
@@ -17,4 +18,4 @@ class TestSolver(TestCase):
 
         steps = solve_game(game)
 
-        self.assertEqual(len(steps), 1)
+        self.assertEqual(steps, [(player, Movement(direction="Right", distance=3))])
