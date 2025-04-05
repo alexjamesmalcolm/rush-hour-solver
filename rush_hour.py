@@ -2,6 +2,9 @@ from typing import List, Literal
 from dataclasses import dataclass
 
 
+Direction = Literal["Top", "Bottom", "Left", "Right"]
+
+
 @dataclass
 class Location:
     col: int
@@ -10,7 +13,7 @@ class Location:
 
 @dataclass
 class RushHourExit(Location):
-    exit_direction: Literal["Top", "Bottom", "Left", "Right"]
+    exit_direction: Direction
 
 
 @dataclass
