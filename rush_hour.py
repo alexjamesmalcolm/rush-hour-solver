@@ -2,7 +2,7 @@ from typing import List, Literal
 from dataclasses import dataclass
 
 
-Direction = Literal["Top", "Bottom", "Left", "Right"]
+Direction = Literal["Up", "Down", "Left", "Right"]
 
 
 @dataclass
