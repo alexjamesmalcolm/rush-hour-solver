@@ -62,6 +62,10 @@ def solve_game(
 
     # Constraint: no 2 cars can occupy the same cells on the same turn
 
+    # Constraint: cars must be on the same side of cars in their line before and after a turn.
+    # Meaning, a car can be on the left side of another car and must be prevented from teleporting
+    # to the right side of the car.
+
     # Assign scores for each turn
     # p += lpSum(i *  for i in range(max_turns))
 
