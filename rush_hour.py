@@ -45,6 +45,9 @@ class RushHourGame:
     def grid(self):
         return get_grid(self.board_size)
 
+    def get_player_goal(self) -> Location:
+        pass
+
 
 def get_grid(size: int) -> List[Location]:
     grid = []
