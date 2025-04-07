@@ -10,6 +10,9 @@ class Location:
     col: int
     row: int
 
+    def __hash__(self):
+        return (self.col, self.row).__hash__()
+
 
 @dataclass
 class RushHourExit(Location):
@@ -18,9 +21,12 @@ class RushHourExit(Location):
 
 @dataclass
 class RushHourCar(Location):
-    is_player: bool
+    id: int
     width: int
     height: int
+
+    def __hash__(self):
+        return self.id
 
     @property
     def direction(self):
@@ -34,3 +40,15 @@ class RushHourGame:
     board_size: int
     cars: List[RushHourCar]
     goal: RushHourExit
+
+    @property
+    def grid(self):
+        return get_grid(self.board_size)
+
+
+def get_grid(size: int) -> List[Location]:
+    grid = []
+    for x in range(size):
+        for y in range(size):
+            grid.append(Location(x, y))
+    return grid

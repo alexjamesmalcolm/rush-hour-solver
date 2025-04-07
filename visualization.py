@@ -5,7 +5,7 @@ from rush_hour import RushHourGame, RushHourCar
 
 
 def random_color():
-    return "#{:06x}".format(random.randint(0, 0xFFFFFF))
+    return "#{:06x}".format(random.randint(0, 0x88FFFF))
 
 
 class RushHourGameVisualization:
@@ -32,7 +32,7 @@ class RushHourGameVisualization:
             car.row * cell_size,
             car.col * cell_size + car.width * cell_size,
             car.row * cell_size + car.height * cell_size,
-            fill="red" if car.is_player else random_color(),
+            fill="red" if car.id == 0 else random_color(),
         )
 
     def draw_exit(self, canvas: tk.Canvas) -> None:
