@@ -26,6 +26,12 @@ def solve_game(
         for car in game.cars
     }
 
+    # Constraint: The first turn is set by initial parameters
+    for car in cars:
+        for location, variable in cars[car][0].items():
+            if location.row == car.row and location.col == car.col:
+                p += variable == 1, f"car_{car.id}_starts_at_{location}"
+
     # Constraint: Each car can only be in one location per turn
     for car in cars:
         for turn in range(max_turns):
