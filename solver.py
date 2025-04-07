@@ -35,6 +35,18 @@ def solve_game(
             )
 
     # Constraint: no horizontal car can exist on a row other than their original
+    for car in cars:
+        if car.direction == "HORIZONTAL":
+            for turn in range(max_turns):
+                p += (
+                    lpSum(
+                        variable
+                        for location, variable in cars[car][turn].items()
+                        if location.row == car.row
+                    )
+                    == 1,
+                    f"car_{car.id}_on_turn_{turn}_must_be_on_row_{car.row}",
+                )
     # Constraint: no vertical car can exist on a column other than their original
     # Constraint: no 2 cars can occupy the same cells on the same turn
 
