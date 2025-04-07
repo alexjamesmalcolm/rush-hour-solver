@@ -4,7 +4,7 @@ from rush_hour import RushHourGame, RushHourCar, RushHourExit, Location
 
 
 class TestRushHourGame(TestCase):
-    def test_get_player_goal_as_x_y(self):
+    def test_get_player_goal_as_4_1(self):
         player = RushHourCar(id=0, col=1, row=1, width=2, height=1)
         game = RushHourGame(
             board_size=6,
