@@ -53,7 +53,8 @@ class RushHourGame:
         raise Exception("Could not find player")
 
     def get_player_goal(self) -> Location:
-        return Location(col=self.board_size - self.player.width, row=1)
+        player = self.player
+        return Location(col=self.board_size - player.width, row=player.row)
 
 
 def get_grid(size: int) -> List[Location]:
