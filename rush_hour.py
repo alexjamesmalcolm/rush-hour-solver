@@ -45,8 +45,15 @@ class RushHourGame:
     def grid(self):
         return get_grid(self.board_size)
 
+    @property
+    def player(self) -> RushHourCar:
+        for car in self.cars:
+            if car.id == 0:
+                return car
+        raise Exception("Could not find player")
+
     def get_player_goal(self) -> Location:
-        return Location(col=4, row=1)
+        return Location(col=self.board_size - self.player.width, row=1)
 
 
 def get_grid(size: int) -> List[Location]:
