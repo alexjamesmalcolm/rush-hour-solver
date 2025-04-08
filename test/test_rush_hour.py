@@ -94,3 +94,16 @@ class TestRushHourGame(TestCase):
         )
 
         self.assertEqual(game.get_player_goal(), Location(col=1, row=4))
+
+    def test_get_player_goal_as_2_3(self):
+        player = RushHourCar(id=0, col=2, row=1, width=1, height=3)
+        game = RushHourGame(
+            board_size=6,
+            cars=[
+                player,
+                RushHourCar(id=1, col=1, row=3, width=1, height=2),
+            ],
+            goal=RushHourExit(col=0, row=0, exit_direction="Down"),
+        )
+
+        self.assertEqual(game.get_player_goal(), Location(col=2, row=3))
