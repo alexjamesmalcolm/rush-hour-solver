@@ -44,7 +44,7 @@ class TestRushHourGame(TestCase):
         self.assertEqual(game.get_player_goal(), Location(col=3, row=2))
 
     def test_get_player_goal_as_0_0(self):
-        player = RushHourCar(id=0, col=0, row=2, width=0, height=2)
+        player = RushHourCar(id=0, col=0, row=2, width=1, height=2)
         game = RushHourGame(
             board_size=6,
             cars=[
@@ -57,7 +57,7 @@ class TestRushHourGame(TestCase):
         self.assertEqual(game.get_player_goal(), Location(col=0, row=0))
 
     def test_get_player_goal_as_1_0(self):
-        player = RushHourCar(id=0, col=1, row=2, width=0, height=2)
+        player = RushHourCar(id=0, col=1, row=2, width=1, height=2)
         game = RushHourGame(
             board_size=6,
             cars=[
