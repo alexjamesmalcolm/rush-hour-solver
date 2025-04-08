@@ -58,6 +58,8 @@ class RushHourGame:
             return Location(col=self.board_size - player.width, row=player.row)
         if self.goal.exit_direction == "Up":
             return Location(col=self.player.col, row=0)
+        if self.goal.exit_direction == "Left":
+            return Location(col=0, row=self.player.row)
 
 
 def get_grid(size: int) -> List[Location]:
