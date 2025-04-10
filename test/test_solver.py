@@ -16,7 +16,7 @@ class TestSolver(TestCase):
             goal=RushHourExit(col=5, row=1, exit_direction="Right"),
         )
 
-        steps = solve_game(game, max_turns=10)
+        steps = solve_game(game, max_turns=1)
 
         self.assertEqual(steps, [(player, Movement(direction="Right", distance=3))])
 
@@ -32,7 +32,7 @@ class TestSolver(TestCase):
             goal=RushHourExit(col=5, row=1, exit_direction="Right"),
         )
 
-        steps = solve_game(game, max_turns=10)
+        steps = solve_game(game, max_turns=2)
 
         self.assertEqual(
             steps,
