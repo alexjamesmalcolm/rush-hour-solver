@@ -72,6 +72,10 @@ def solve_game(
     # Meaning, a car can be on the left side of another car and must be prevented from teleporting
     # to the right side of the car.
 
+    # Constraint: Need to define speed of each car as the change in position per turn
+
+    # Constraint: Need to figure out a way to have 1 car move per turn by constraining speed
+
     # Assign scores for each turn
     # p += lpSum(i *  for i in range(max_turns))
 
