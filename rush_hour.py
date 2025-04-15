@@ -34,6 +34,11 @@ class RushHourCar(Location):
             return "HORIZONTAL"
         return "VERTICAL"
 
+    def is_on_path(self, location: Location) -> bool:
+        if self.direction == "HORIZONTAL":
+            return location.row == self.row
+        return location.col == self.col
+
 
 @dataclass
 class RushHourGame:
