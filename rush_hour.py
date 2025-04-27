@@ -1,5 +1,7 @@
+from __future__ import annotations
 from typing import List, Literal
 from dataclasses import dataclass
+from math import hypot
 
 
 Direction = Literal["Up", "Down", "Left", "Right"]
@@ -12,6 +14,24 @@ class Location:
 
     def __hash__(self):
         return (self.col, self.row).__hash__()
+
+    def distance(self, other: Location) -> float:
+        return hypot(self.col - other.col, self.row - other.row)
+
+    def direction(self, other: Location) -> Direction:
+        if self.col == other.col:
+            if other.row > self.row:
+                return "Down"
+            if other.row < self.row:
+                return "Up"
+            raise Exception("Locations are the same")
+        if self.row == other.row:
+            if other.col > self.col:
+                return "Right"
+            if other.col < self.col:
+                return "Left"
+            raise Exception("Locations are the same")
+        raise Exception("Locations do not share either a row or column")
 
 
 @dataclass

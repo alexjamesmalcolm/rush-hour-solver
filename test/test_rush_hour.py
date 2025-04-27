@@ -107,3 +107,35 @@ class TestRushHourGame(TestCase):
         )
 
         self.assertEqual(game.get_player_goal(), Location(col=2, row=3))
+
+    def test_end_is_right_of_start(self):
+        start = Location(col=1, row=1)
+        end = Location(col=2, row=1)
+
+        result = start.direction(end)
+
+        self.assertEqual(result, "Right")
+
+    def test_end_is_down_from_start(self):
+        start = Location(col=1, row=1)
+        end = Location(col=1, row=2)
+
+        result = start.direction(end)
+
+        self.assertEqual(result, "Down")
+
+    def test_end_is_up_from_start(self):
+        start = Location(col=1, row=1)
+        end = Location(col=1, row=0)
+
+        result = start.direction(end)
+
+        self.assertEqual(result, "Up")
+
+    def test_end_is_left_of_start(self):
+        start = Location(col=1, row=1)
+        end = Location(col=0, row=1)
+
+        result = start.direction(end)
+
+        self.assertEqual(result, "Left")
