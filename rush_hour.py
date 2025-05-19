@@ -18,7 +18,7 @@ class Location:
     def distance(self, other: Location) -> float:
         return hypot(self.col - other.col, self.row - other.row)
 
-    def direction(self, other: Location) -> Direction:
+    def compare_direction(self, other: Location) -> Direction:
         if self.col == other.col:
             if other.row > self.row:
                 return "Down"

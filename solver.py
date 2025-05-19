@@ -199,7 +199,7 @@ def solve_game(
                             car,
                             Movement(
                                 distance=int(start.distance(end)),
-                                direction=start.direction(end),
+                                direction=start.compare_direction(end),
                             ),
                         )
                     )

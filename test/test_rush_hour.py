@@ -112,7 +112,7 @@ class TestRushHourGame(TestCase):
         start = Location(col=1, row=1)
         end = Location(col=2, row=1)
 
-        result = start.direction(end)
+        result = start.compare_direction(end)
 
         self.assertEqual(result, "Right")
 
@@ -120,7 +120,7 @@ class TestRushHourGame(TestCase):
         start = Location(col=1, row=1)
         end = Location(col=1, row=2)
 
-        result = start.direction(end)
+        result = start.compare_direction(end)
 
         self.assertEqual(result, "Down")
 
@@ -128,7 +128,7 @@ class TestRushHourGame(TestCase):
         start = Location(col=1, row=1)
         end = Location(col=1, row=0)
 
-        result = start.direction(end)
+        result = start.compare_direction(end)
 
         self.assertEqual(result, "Up")
 
@@ -136,6 +136,6 @@ class TestRushHourGame(TestCase):
         start = Location(col=1, row=1)
         end = Location(col=0, row=1)
 
-        result = start.direction(end)
+        result = start.compare_direction(end)
 
         self.assertEqual(result, "Left")
