@@ -170,7 +170,7 @@ def solve_game(
 
     p += lpSum(is_player_at_goal(i) for i in range(max_turns))
 
-    p.solve(PULP_CBC_CMD(msg=0))
+    p.solve(PULP_CBC_CMD(msg=False))
     print(p)
 
     for turns in car_turn_movement.values():
