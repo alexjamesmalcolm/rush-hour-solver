@@ -7,11 +7,13 @@ from pulp import (
     LpBinary,
     lpSum,
     LpMaximize,
-    LpAffineExpression,
     PULP_CBC_CMD,
+    permutation,
 )
 
 from rush_hour import RushHourGame, RushHourCar, Direction, Location
+from lp_utils import add_constraints, lp_and
+from solver_utils import simplify_results
 
 
 @dataclass
@@ -34,20 +36,70 @@ def solve_game(
         for car in game.cars
     }
 
-    turn_car_active: List[Dict[RushHourCar, LpVariable]] = [
-        LpVariable.dicts(f"turn_{i}_car_active", game.cars, cat=LpBinary)
-        for i in range(max_turns)
-    ]
+    car_turn_movement: Dict[
+        RushHourCar, List[Dict[Tuple[Location, Location], LpVariable]]
+    ] = {}
+    for car in game.cars:
+        print(car)
+        locations_on_path = [
+            location for location in game.grid if car.is_on_path(location)
+        ]
+        movements = [
+            (start, end)
+            for start, end in permutation(locations_on_path, 2)
+            # if start.distance(end) == 1
+        ]
+        car_turn_movement[car] = [
+            LpVariable.dicts(
+                f"car_{car.id}_turn_{turn}_movement", movements, cat=LpBinary
+            )
+            for turn in range(0, max_turns)
+        ]
+
+    # Constraint: Defining car_turn_movement by the values of car_turn_position
     for car in car_turn_position:
-        for turn in range(max_turns):
-            car_moved_positively_on_this_turn = LpVariable(
-                f"car_{car.id}_on_turn_{turn}_moved_forward", cat=LpBinary
+        for turn in range(1, max_turns):
+            movements = car_turn_movement[car][turn]
+            for (start, end), movement_variable in movements.items():
+                previous_position = car_turn_position[car][turn - 1][start]
+                current_position = car_turn_position[car][turn][end]
+                name = (
+                    "defining_"
+                    + str(movement_variable)
+                    + "_as_"
+                    + str(current_position)
+                    + "_and_"
+                    + str(previous_position)
+                )
+                p = add_constraints(
+                    p,
+                    lp_and(
+                        a=current_position,
+                        b=previous_position,
+                        answer=movement_variable,
+                        name=name,
+                    ),
+                )
+
+    # Constraint: Preventing teleportation movements in car_turn_movement
+    for car, turn_movement in car_turn_movement.items():
+        for turn in range(1, max_turns):
+            movements = turn_movement[turn]
+            for (start, end), movement_variable in movements.items():
+                if start.distance(end) > 1:
+                    p += movement_variable == 0
+
+    # Constraint: One car must move per turn
+    for turn in range(1, max_turns):
+        p += (
+            lpSum(
+                move
+                for car in game.cars
+                for move in car_turn_movement[car][turn].values()
             )
-            car_moved_negatively_on_this_turn = LpVariable(
-                f"car_{car.id}_on_turn_{turn}_moved_backward", cat=LpBinary
-            )
-            p += car_moved_positively_on_this_turn >= lpSum
-            # Taking a single row as an example, I think I'm supposed to do something like assign each cell in the row an increasing value. Then take the lpSum of a row on turn i and take the difference between that lpSum and the lpSum of the same row on turn i + 1. Then I will make car_moved_positively_on_this_turn >= that difference. I'm not sure how it would work for the car moving negatively but it can't be that different.
+            == 1,
+            f"one_car_must_move_on_turn_{turn}",
+        )
 
     # Constraint: Need to define speed of each car as the change in position per turn
 
@@ -102,7 +154,7 @@ def solve_game(
     # Constraint: Need to figure out a way to have 1 car move per turn by constraining speed
 
     # Assign scores for each turn
-    def is_player_at_goal(turn: int) -> LpAffineExpression:
+    def is_player_at_goal(turn: int) -> LpVariable:
         player = None
         for car in car_turn_position:
             if car.id == 0:
@@ -121,7 +173,35 @@ def solve_game(
     p.solve(PULP_CBC_CMD(msg=0))
     print(p)
 
-    for variable in p.variables():
-        if variable.varValue == 1:
-            print(variable)
-    return [(game.cars[0], Movement(direction="Right", distance=3))]
+    for turns in car_turn_movement.values():
+        for turn in range(max_turns):
+            for variable in turns[turn].values():
+                if variable.varValue == 1:
+                    print(f"{variable} == 1")
+    if p.objective:
+        print(p.objective.value())
+    else:
+        raise Exception("Why does the problem not have an objective?")
+
+    for turn in range(max_turns):
+        value_of_turn = is_player_at_goal(turn)
+        print(f"Turn {turn} score: {value_of_turn} == {value_of_turn.value()}")
+
+    print(f"The goal is {game.get_player_goal()}")
+    results: List[Tuple[RushHourCar, Movement]] = []
+    for car, turn_movement in car_turn_movement.items():
+        for turn in range(max_turns):
+            for (start, end), variable in turn_movement[turn].items():
+                if variable.varValue == 1:
+                    print("Moved")
+                    results.append(
+                        (
+                            car,
+                            Movement(
+                                distance=int(start.distance(end)),
+                                direction=start.direction(end),
+                            ),
+                        )
+                    )
+
+    return simplify_results(results)
