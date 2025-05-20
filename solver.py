@@ -40,7 +40,6 @@ def solve_game(
         RushHourCar, List[Dict[Tuple[Location, Location], LpVariable]]
     ] = {}
     for car in game.cars:
-        print(car)
         locations_on_path = [
             location for location in game.grid if car.is_on_path(location)
         ]
@@ -144,6 +143,27 @@ def solve_game(
                 )
 
     # Constraint: no 2 cars can occupy the same cells on the same turn
+    for car_a, car_b in permutation(game.cars, 2):
+        for car_a_position in game.grid:
+            if not car_a.is_on_path(car_a_position):
+                continue
+            car_a_occupied_locations = car_a.get_occupied_locations(car_a_position)
+            for car_b_position in game.grid:
+                if not car_b.is_on_path(car_b_position):
+                    continue
+                car_b_occupied_locations = car_b.get_occupied_locations(car_b_position)
+                do_cars_collide = any(
+                    car_a_occupied_location == car_b_occupied_location
+                    for car_a_occupied_location in car_a_occupied_locations
+                    for car_b_occupied_location in car_b_occupied_locations
+                )
+                if do_cars_collide:
+                    for turn in range(max_turns):
+                        p += (
+                            car_turn_position[car_a][turn][car_a_position]
+                            + car_turn_position[car_b][turn][car_b_position]
+                            <= 1
+                        )
 
     # Constraint: cars must be on the same side of cars in their line before and after a turn.
     # Meaning, a car can be on the left side of another car and must be prevented from teleporting
@@ -171,7 +191,6 @@ def solve_game(
     p += lpSum(is_player_at_goal(i) for i in range(max_turns))
 
     p.solve(PULP_CBC_CMD(msg=False))
-    print(p)
 
     for turns in car_turn_movement.values():
         for turn in range(max_turns):
@@ -203,5 +222,6 @@ def solve_game(
                             ),
                         )
                     )
-
-    return simplify_results(results)
+            if is_player_at_goal(turn).varValue == 1:
+                return simplify_results(results)
+    raise Exception("No solution found")
