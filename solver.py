@@ -208,11 +208,11 @@ def solve_game(
 
     print(f"The goal is {game.get_player_goal()}")
     results: List[Tuple[RushHourCar, Movement]] = []
-    for car, turn_movement in car_turn_movement.items():
-        for turn in range(max_turns):
+    for turn in range(max_turns):
+        for car, turn_movement in car_turn_movement.items():
             for (start, end), variable in turn_movement[turn].items():
                 if variable.varValue == 1:
-                    print("Moved")
+                    print(f"Car {car.id} on turn {turn} moved from {start} to {end}")
                     results.append(
                         (
                             car,
