@@ -139,3 +139,26 @@ class TestRushHourGame(TestCase):
         result = start.compare_direction(end)
 
         self.assertEqual(result, "Left")
+
+
+class TestRushHourCarGetOccupiedLocations(TestCase):
+    def test_car_that_is_one_by_one_square_has_only_one_location(self):
+        car = RushHourCar(id=0, col=0, row=0, width=1, height=1)
+
+        position = Location(0, 0)
+        locations = car.get_occupied_locations(position)
+        self.assertEqual([position], locations)
+
+    def test_car_that_is_one_by_two(self):
+        car = RushHourCar(id=0, col=0, row=0, width=1, height=2)
+
+        position = Location(0, 0)
+        locations = car.get_occupied_locations(position)
+        self.assertEqual([position, Location(col=0, row=1)], locations)
+
+    def test_car_that_is_two_by_one_and_offset_one_col(self):
+        car = RushHourCar(id=0, col=0, row=0, width=2, height=1)
+
+        position = Location(col=1, row=0)
+        locations = car.get_occupied_locations(position)
+        self.assertEqual([position, Location(col=2, row=0)], locations)

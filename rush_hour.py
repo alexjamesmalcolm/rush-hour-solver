@@ -59,6 +59,17 @@ class RushHourCar(Location):
             return location.row == self.row
         return location.col == self.col
 
+    def get_occupied_locations(self, location: Location) -> List[Location]:
+        """Assuming the location given is on this cars path, return a list of locations that the
+        car would occupy if it were at the given location."""
+        occupied_locations: List[Location] = []
+        for w in range(self.width):
+            for h in range(self.height):
+                occupied_locations.append(
+                    Location(col=location.col + w, row=location.row + h)
+                )
+        return occupied_locations
+
 
 @dataclass
 class RushHourGame:
